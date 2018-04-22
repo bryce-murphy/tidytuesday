@@ -18,12 +18,40 @@ This
 library(readr)
 library(dplyr)
 library(tidyr)
+library(stringr)
 library(janitor)
 library(RCurl)
+library(maps)
+library(mapdata)
+library(leaflet)
+library(ggplot2)
+
+path <- getURL("https://raw.githubusercontent.com/bryce-murphy/tidytuesday/master/global_mortality_3.csv")
+
+mort <- read_csv(path) %>%
+  clean_names() %>%
+  rename_all(
+      funs(
+        str_replace(., "_percent", ""))) %>%
+  mutate_if(is.numeric, funs(round(., 4)))
+
+world <- map_data("world") %>%
+  rename(country = region)
 
 
+world_mort <- 
+  mort %>%
+  inner_join(world, by = "country") %>%
+  gather(key = mortality_type, value = mortality_rate, -c(1:3, 36:40))
 
-mort <- read_csv("C:/Users/Bryce/Desktop/Github_Projects/tidytuesday/global_mortality_3")
+north_america <- "c"
+
+# leaflet(data = world) %>%
+#   addTiles() %>%
+#   addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE)
+#    
+
+
 
 
 ```
