@@ -25,11 +25,9 @@ top_female_jobs <- unique(top_female$occupation)  # Creates vector of names to u
 male_counterparts <- 
   wages %>%
   filter(gender == "Male", occupation %in% top_female_jobs) %>%
-  full_join(top_female) %>%
-  group_by(gender) %>%
-  mutate(position = rank(income))
+  full_join(top_female)
 
-# 
+# Barplot of top 10 female occupations
 ggplot(male_counterparts, aes(x = reorder(occupation, income), y = income, fill = gender)) +
   geom_bar(stat = "identity", position = "dodge") +
   coord_flip() +
